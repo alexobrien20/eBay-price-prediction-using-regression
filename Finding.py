@@ -1,10 +1,10 @@
 import os 
 import sys
+import re
 from argparse import ArgumentParser
 import ebaysdk
 from ebaysdk.finding import Connection as Finding
 from ebaysdk.exception import ConnectionError
-import pandas as pd
 import psycopg2
 from psycopg2 import Error
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -32,20 +32,58 @@ def connect_to_database(username,password,dbname):
         print("Connected to : {}".format(dbname))
         return connection
     except psycopg2.Error as error:
-        print("Unable to connect to database")
+        print("Unable to connect to database called : ".format(dbname))
         print(error)
 
- def insert_value_into_db(connection,cursor,item_to_insert):
+def insert_value_into_db(connection,cursor,item,tablename):
     columns = []
     item_keys = list(item.keys())
     for x in item_keys:
-         columns.append('"' + x + '"')
+        columns.append('"' + x + '"')
     columns = ', '.join(columns)
     placeholders = ', '.join(["%s"] * len(item_keys))
+    #selling_state = re.sub(r"(\w)([A-Z])", r"\1 \2", item['sellingStatus.sellingState'])
+    #item['sellingStatus.sellingState'] = selling_state
     values = tuple(item.values())
     insert_query = 'INSERT INTO {} ({}) VALUES ({})'.format(tablename,columns, placeholders)
-    cursor.execute(insert_query, values)
-    connection.commit()
+    try:
+        cursor.execute(insert_query, values)
+        connection.commit()
+    except psycopg2.errors.UniqueViolation as e:
+        connection.rollback()
+        pass
+    except psycopg2.errors.UndefinedColumn as e:
+        print("This is running!")
+        print(item['itemId'])
+        connection.rollback()
+        print(e)
+        error = e
+        column_error = error.diag.message_primary
+        column_name = column_error.split(' ')[1]
+        column_name_value = column_name.replace('"','')
+        datatype = type(item[column_name_value])
+        if(datatype == str):
+            datatype = 'TEXT'
+        elif(datatype  == int):
+            datatype = 'INT'
+        elif(datatype  == float):
+            datatype = 'FLOAT'
+        elif(datatype  == bool):
+            datatype = 'BOOLEAN'
+        else:
+            print("Datatype isn't TEXT, INT, FLOAT or BOOLEAN")
+            print(value)
+        try:
+            print("Altering the table!")
+            alter_table_query = 'ALTER TABLE {} ADD COLUMN IF NOT EXISTS {} {}'.format(tablename,column_name,datatype)
+            cursor.execute(alter_table_query)
+            connection.commit()
+            print("New Colum has been added! called {} with datatype {}".format(column_name,datatype))
+            insert_value_into_db(connection,cursor,item,tablename)
+        except psycopg2.Error as e:
+            print("Error inside of Error")
+            print(e)   
+
 
 def item_to_flat_dictionary(item):
     empty_dict = {}
@@ -67,14 +105,15 @@ def item_to_flat_dictionary(item):
         
     return empty_dict
 
-def get_completed_findings_data(args, username, password,dbname):
-
+def get_completed_findings_data(args, username, password,dbname,tablename):
+    f = open('appId.txt')
+    appId = f.read()
     connection_to_db = connect_to_database(username,password,dbname)
     cursor = connection_to_db.cursor()
 
     try:
-        api = Finding(config_file=args.yaml,siteid='EBAY-GB',appid=opts.appid,
-                    domain=opts.domain, debug = opts.debug, warnings=True)
+        api = Finding(config_file=None,siteid='EBAY-GB',appid=appId,
+                    domain=args.domain, debug = args.debug, warnings=True)
         
         api_requests = {
             'keywords': u'PlayStation 3 Console',
@@ -92,7 +131,7 @@ def get_completed_findings_data(args, username, password,dbname):
         }
         
         response = api.execute('findCompletedItems',api_requests)
-        max_num_of_pages = response.dict()['paginationOutput']['totalPages']
+        max_num_of_pages = int(response.dict()['paginationOutput']['totalPages'])
         if(max_num_of_pages > 100): ##ebay api only allows to search for max of 10,000 items, 100 items per page 
             max_num_of_pages = 100
         print("There is a total of : {} Pages".format(max_num_of_pages))
@@ -114,14 +153,17 @@ def get_completed_findings_data(args, username, password,dbname):
                 ]
             }
             response = api.execute('findCompletedItems',api_requests)
-            item_results = response.dict()['searchResults']
-            flattened_results = item_to_flat_dictionary(item_results)
+            item_results = response.dict()['searchResult']
 
             print("Inserting Page : {} Out of : {} Into Table : {} In Database : {}".format(page,max_num_of_pages,tablename, dbname))
 
+
+            print("There are {} items on page {}".format(len(item_results['item']),page))
+
             for item in item_results['item']:
-                item_flattened = item_to_flat_dictionary(item):
-                insert_value_into_db(connection_to_db,cursor,item_flattened)
+                item_flattened = item_to_flat_dictionary(item)
+                insert_value_into_db(connection_to_db,cursor,item_flattened,tablename)
+
 
         cursor.close()
         connection_to_db.close()
@@ -131,5 +173,19 @@ def get_completed_findings_data(args, username, password,dbname):
         print(e)
         print(e.response.dict())
 
-if __name__ = "__main__":
+if __name__ == "__main__":
+    try:
+        f = open('dbinfo.txt','r')
+        info = f.readlines()
+        user = info[0].strip()
+        password = info[1].strip() 
+        f.close()
+    except:
+        print("There was an error reading your dbinfo file")  
+
+    args = init_options()
+    dbname = input(print("What do you want to call the database? : "))
+    tablename = input(print("What do you want to call the table? : "))
+    get_completed_findings_data(args,user,password,dbname,tablename)
+
     
