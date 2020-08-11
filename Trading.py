@@ -145,7 +145,7 @@ def get_item_details(args, username, password,dbname,tablename):
         print(e.response.dict())
     
     for counter,itemid in enumerate(list_of_itemids):
-        if(counter % 50 == 0):
+        if(counter % 500 == 0):
             start = time.time()
             print("Getting Information from Item : {} out of : {}".format(counter,len(list_of_itemids)))
         itemid = str(itemid).split(',')
@@ -172,7 +172,7 @@ def get_item_details(args, username, password,dbname,tablename):
                 relevant_information.update(item_specifics) ##combines the three dictionaries together
 
                 insert_value_into_db(connection_to_db,cursor,relevant_information,tablename,itemid)
-                if(counter % 50 == 0):
+                if(counter % 500 == 0):
                     end = time.time()
                     time_taken = (end - start) * counter
                     time_remaining = (end - start) * len(list_of_itemids) - time_taken
