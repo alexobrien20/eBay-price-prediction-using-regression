@@ -16,13 +16,19 @@ I collected all of the standard information for each item using the Ebay Finding
 * Network
 
 My code limits the user to making a limited number of calls for a 24 hour period (10,000 for Finding and 5,000 for Trading) but if you were to collect data on a larger scale you can apply to extend this limit on the eBay API website. [API call limits](https://developer.ebay.com/support/api-call-limits)
-# Data Cleaning
-I used Pandas for the data cleaning in jupyter notebooks.
 
+# Data Cleaning
+For the data cleaning I used the python module Pandas. 
 ![](Images/pandasdb.PNG)
+
+Out of a total of 380 columns, 305 were missing more than 50 of there data, I decided to drop the columns that had more than 50% of there data missing. I then filled in the remaining missing data points with the keyword 'None'. I also tried to remove data entires that had words unrelated to the keyword 'Iphone 7' for example if the item had the words 'case' or 'screen protector' they were dropped from the database. After all of the missing values were fixed I exported the data table to a pickle.
+
 # Data pre-processing
-Titles ect.
+I thought that if a title had the word 'Plus' (relating to an Iphone 7 plus) in the title it would sell for more, but if the seller hadn't specifically specified that it was a Iphone 7 Plus in the item specifics the model might not make use of that fact. So I used Sklearn's TfidfVectorizer and CountVectorizer on the item title and description. I then used the top 100 words to create an extra 200 columns in the database to signify if a word appear in the title or descipriton e.g. 'Plus in title'. I then calcualted the correlation between each new cateogry and the price then I kept the columns that showed any sort of correlation. Using this technique I managed to add an extra 21 columns. 
+e.g.
+
 # Initial Modeling
+
 
 # Hyperparameter optimization
 # Conclusion
