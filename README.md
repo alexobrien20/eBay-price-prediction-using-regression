@@ -41,5 +41,21 @@ I then calculated the correlations for each category with the ending price and p
 
 I deciced to use an 80,20 split for the training and test data. My goal was to make a model that used the input X for each data item to predict the Price (Y targets) for each item as accurartely as possible. 
 
+As a baseline I'm going to compare the model to a simpler model where we just pick the median. So for every value in X_test we predict that the value will be the median value of the y_train. Then I compared the median values with the actual test values using the root mean squared error and the mean absolute percentage error metric.
+Model | Root Mean Squared Error (£) | Mean Absolute Percentage Error (%)
+------|-----------------------------------------|
+Median Value | 53.470 | 55.521
+
+So our model needs to have a better RMSE than the median value model otherwise you might aswell just pick the median value each time you try to estimate the value of an item.
+
+For the initial modelling I used a selection of Sklearn models, all with default parameters, and evaluated them using cross fold validation, using 10 folds, then evaulated how well each model's RMSE on the test set. The top 5 best models were,
+
+Model | Train CV Mean | Root Mean Squared Error on test set
+------|---------------|---------
+RandomForestRegressor| 1.23 | 1.18
+GradientBoostingRegressor | 1.31 | 1.26 
+SVR	| 1.38 | 1.34 
+NuSVR | 1.38 |1.35 
+
 # Hyperparameter optimization
 # Conclusion
