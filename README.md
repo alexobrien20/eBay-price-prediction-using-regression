@@ -27,8 +27,19 @@ Out of a total of 380 columns, 305 were missing more than 50 of there data, I de
 I thought that if a title had the word 'Plus' (relating to an Iphone 7 plus) in the title it would sell for more, but if the seller hadn't specifically specified that it was a Iphone 7 Plus in the item specifics the model might not make use of that fact. So I used Sklearn's TfidfVectorizer and CountVectorizer on the item title and description. I then used the top 100 words to create an extra 200 columns in the database to signify if a word appear in the title or descipriton e.g. 'Plus in title'. I then calcualted the correlation between each new cateogry and the price then I kept the columns that showed any sort of correlation. Using this technique I managed to add an extra 21 columns. 
 e.g.
 
+# Exploratory data analysis
+
+I noticed there were outliers in the prices and decided to remove those values. I also noticed that there was a large number of items that sold for a lower price than expected. For example items that would sell for 0.99p so I assumed that these values weren't authentic and something else was going on e.g. ending an auction early to sell to a specific person. Because of this the data wasn't exaclty normally distributed, so I applied a square transformation to try and make it look more like the normal distribution. But there are still a few outliers than may affect the model. 
+
+![](Images/transformation.png)
+
+I then calculated the correlations for each category with the ending price and plotted a selection of graphs to visual the relationships between variables, such as whether the day of the week the listing ends on has an impact on the price. Working out the top 10 negative correlations gives us the heatmap below.
+
+![](Images/corr1.png)
+
 # Initial Modeling
 
+I deciced to use an 80,20 split for the training and test data. My goal was to make a model that used the input X for each data item to predict the Price (Y targets) for each item as accurartely as possible. 
 
 # Hyperparameter optimization
 # Conclusion
