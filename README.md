@@ -43,7 +43,7 @@ I deciced to use an 80,20 split for the training and test data. My goal was to m
 
 As a baseline I'm going to compare the model to a simpler model where we just pick the median. So for every value in X_test we predict that the value will be the median value of the y_train. Then I compared the median values with the actual test values using the root mean squared error and the mean absolute percentage error metric.
 Model | Root Mean Squared Error (£) | Mean Absolute Percentage Error (%)
-------|-----------------------------------------|
+------|-----------------------------------------|------------
 Median Value | 53.470 | 55.521
 
 So our model needs to have a better RMSE than the median value model otherwise you might aswell just pick the median value each time you try to estimate the value of an item.
