@@ -24,7 +24,7 @@ For the data cleaning I used the python module Pandas.
 Out of a total of 380 columns, 305 were missing more than 50 of there data, I decided to drop the columns that had more than 50% of there data missing. I then filled in the remaining missing data points with the keyword 'None'. I also tried to remove data entires that had words unrelated to the keyword 'Iphone 7' for example if the item had the words 'case' or 'screen protector' they were dropped from the database. After all of the missing values were fixed I exported the data table to a pickle.
 
 # Data pre-processing
-I thought that if a title had the word 'Plus' (relating to an Iphone 7 plus) in the title it would sell for more, but if the seller hadn't specifically specified that it was a Iphone 7 Plus in the item specifics the model might not make use of that fact. So I used Sklearn's TfidfVectorizer and CountVectorizer on the item title and description. I then used the top 100 words to create an extra 200 columns in the database to signify if a word appear in the title or descipriton e.g. 'Plus in title'. I then calcualted the correlation between each new cateogry and the price then I kept the columns that showed any sort of correlation. Using this technique I managed to add an extra 21 columns. e.g.
+I thought that if a title had the word 'Plus' (relating to an Iphone 7 plus) in the title it would sell for more, but if the seller hadn't specifically specified that it was a Iphone 7 Plus in the item specifics the model might not make use of that fact. So I used Sklearn's TfidfVectorizer and CountVectorizer on the item title and description. I then used the top 100 words to create an extra 200 columns in the database to signify if a word appear in the title or descipriton e.g. 'Plus in title'. I then calculated the correlation between each new cateogry and the price then I kept the columns that showed any sort of correlation. Using this technique I managed to add an extra 21 columns. e.g.
 Correlation with Price | Column
 -----------------------|-------
 0.23 | unlocked in title
@@ -46,20 +46,24 @@ I then calculated the correlations for each category with the ending price and p
 I deciced to use an 80,20 split for the training and test data. My goal was to make a model that used the input X for each data item to predict the Price (Y targets) for each item as accurartely as possible. 
 
 As a baseline I'm going to compare the model to a simpler model where we just pick the median. So for every value in X_test we predict that the value will be the median value of the y_train. Then I compared the median values with the actual test values using the root mean squared error and the mean absolute percentage error metric.
-Model | Root Mean Squared Error (£) | Mean Absolute Percentage Error (%)
+Model | Median Absolute Error (£) | Mean Absolute Percentage Error (%)
 ------|-----------------------------------------|------------
-Median Value | 53.470 | 55.521
+Median Value | 35.00 | 55.21
 
 So our model needs to have a better RMSE than the median value model otherwise you might aswell just pick the median value each time you try to estimate the value of an item.
 
-For the initial modelling I used a selection of Sklearn models, all with default parameters, and evaluated them using cross fold validation, using 10 folds, then evaulated how well each model's RMSE on the test set. The top 5 best models were,
+For the initial modelling I used a selection of Sklearn models, all with default parameters, and evaluated them using cross fold validation, using 10 folds, then evaulated how well each model's RMSE on the test set. The top 4 best models were,
 
-Model | Train CV Mean | Root Mean Squared Error on test set
+Model | Median Absolute Error (£) |  Mean Absolute Percentage Error (%)
 ------|---------------|---------
-RandomForestRegressor| 1.23 | 1.18
-GradientBoostingRegressor | 1.31 | 1.26 
-SVR	| 1.38 | 1.34 
-NuSVR | 1.38 |1.35 
+RandomForestRegressor| 14.02 | 19.02
+GradientBoostingRegressor | 16.10 | 21.91
+SVR	| 16.50 | 24.09 
+NuSVR | 16.90 | 24.25
+
+So we have models that do better than just predicting the median price each time but the percentage errors of the models are still high. 
 
 # Hyperparameter optimization
+
+To try and improve the models I'm going to run RandomizedSearchCV to try and optimize the parameters and improve each model's score.
 # Conclusion
