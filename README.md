@@ -39,7 +39,7 @@ I noticed there were outliers in the prices and decided to remove those values. 
 
 I then calculated the correlations for each category with the ending price and plotted a selection of graphs to visual the relationships between variables, such as whether the day of the week the listing ends on has an impact on the price. Working out the top 10 negative correlations gives us the heatmap below.
 
-![](Images/corr1.png)
+![](Images/Untitled(1).jpg)
 
 # Initial Modeling
 
