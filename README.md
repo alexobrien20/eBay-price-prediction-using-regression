@@ -45,21 +45,22 @@ I then calculated the correlations for each category with the ending price and p
 
 I deciced to use an 80,20 split for the training and test data. My goal was to make a model that used the input X for each data item to predict the Price (Y targets) for each item as accurartely as possible. 
 
-As a baseline I'm going to compare the model to a simpler model where we just pick the median. So for every value in X_test we predict that the value will be the median value of the y_train. Then I compared the median values with the actual test values using the root mean squared error and the mean absolute percentage error metric.
-Model | Median Absolute Error (£) | Mean Absolute Percentage Error (%)
+As a baseline I'm going to compare the model to a simpler model where we just pick the median. So for every value in X_test we predict that the value will be the median value of the y_train. Then I compared the median values with the actual test values using the root mean squared error and the mean absolute percentage error metric. I decided to use the RMSE over the MAE because I wanted the model to be able to predict the tail prices, prices that were high but also still valid, but a similar model could be made using MAE to focus less on the tail prices.
+
+Model | Root Mean Squared Error (£) | Mean Absolute Percentage Error (%)
 ------|-----------------------------------------|------------
-Median Value | 35.00 | 55.21
+Median Value | 53.47| 55.21
 
 So our model needs to have a better RMSE than the median value model otherwise you might aswell just pick the median value each time you try to estimate the value of an item.
 
 For the initial modelling I used a selection of Sklearn models, all with default parameters, and evaluated them using cross fold validation, using 10 folds, then evaulated how well each model's RMSE on the test set. The top 4 best models were,
 
-Model | Median Absolute Error (£) |  Mean Absolute Percentage Error (%)
+Model | Root Mean Squared Error (£) |  Mean Absolute Percentage Error (%)
 ------|---------------|---------
-RandomForestRegressor| 14.02 | 19.02
-GradientBoostingRegressor | 16.10 | 21.91
-SVR	| 16.50 | 24.09 
-NuSVR | 16.90 | 24.25
+RandomForestRegressor| 25.39 | 19.06
+GradientBoostingRegressor | 26.75 | 21.89
+SVR	| 28.12 | 24.09  
+NuSVR | 28.24 | 24.25
 
 So we have models that do better than just predicting the median price each time but the percentage errors of the models are still high. 
 
