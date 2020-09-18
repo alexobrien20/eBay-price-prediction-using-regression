@@ -78,7 +78,7 @@ GradientBoostingRegressor | 24.80 | 18.86 | -1.95
 SVR	| 27.72 | 23.28 | -0.4
 NuSVR | 27.31 | 22.47 | -0.93
 
-The biggest improvement was with the GradientBoostingRegressor,but the result of the models only had a slight improvement. Before deciding that was the best model I also tried an ensemble method with a different combination of models, the best model was a combination of the RandomForestRegressor and the GradientBoostingRegressor. I managed to reduce the RMSE by £0.07 but the mean percentage error still went up.
+The biggest improvement was with the GradientBoostingRegressor,but the result of the other models only had a slight improvement. Before deciding that was the best model I also tried an ensemble method with a different combination of models, the best model was a combination of the RandomForestRegressor and the GradientBoostingRegressor. I managed to reduce the RMSE by £0.07 but the mean percentage error still went up.
 
 
 Model | Root Mean Squared Error (£) |  Mean Absolute Percentage Error (%)
