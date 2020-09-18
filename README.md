@@ -87,6 +87,6 @@ RandomForestRegressor & GradientBoostingRegressor | 25.32 | 19.86
 
 # 7. Conclusion
 
-The GradientBoostingRegressor provided the best results but with a mean percentage error of 18.86% it still is unreliable. So the end I wasn't able to create a highly accurate model. Although the model does significantly better than the baseline model of just predicting the median price, it would take a lot more fine tuning before I'd use it myself. If I was going to make the model more accurate I would try and collect more data, maybe a wider selection of items, and do more in depth data cleaning. 
+The GradientBoostingRegressor provided the best results but with a mean percentage error of 18.86% it is still unreliable. So the end I wasn't able to create a highly accurate model. Although the model does significantly better than the baseline model of just predicting the median price, it would take a lot more fine tuning before I'd use it myself. If I was going to make the model more accurate I would try and collect more data, maybe a wider selection of items, and do more in depth data cleaning. 
 
 If I wanted to create a model to buy, and then sell items, I would remove prices from the dataset that I know are higher than the prices offered by the eBay stores selling iPhones so that the model could would focus less on the tail end values and be able to price the median values more accurately. 
