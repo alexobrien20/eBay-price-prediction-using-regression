@@ -69,25 +69,25 @@ So we have models that do better than just predicting the median price each time
 
 To try and improve the models I used RandomizedSearchCV to try and optimize the parameters and improve each model's score.
 
-I decided to look at the top 4 models.
+The top 4 models now, ranked by RMSE, are
 
 Model | Root Mean Squared Error (£) |  Mean Absolute Percentage Error (%) | Root Mean Squared Error Change (£)
 ------|---------------|---------|-------------------
-RandomForestRegressor| 25.30| 19.04 |-0.09
-GradientBoostingRegressor | 24.80 | 18.86 | -1.95
-SVR	| 27.72 | 23.28 | -0.4
-NuSVR | 27.31 | 22.47 | -0.93
+GradientBoostingRegressor | 24.74 | 18.71 | -2.01
+RandomForestRegressor| 25.30 | 19.07 | -0.09
+NuSVR | 27.39 | 22.47 | -0.85 
+SVR	| 27.72 | 23.28 | -0.4 
 
-The biggest improvement was with the GradientBoostingRegressor,but the result of the other models only had a slight improvement. Before deciding that was the best model I also tried an ensemble method with a different combination of models, the best model was a combination of the RandomForestRegressor and the GradientBoostingRegressor. I managed to reduce the RMSE by £0.07 but the mean percentage error still went up.
+Our best model now is the GradientBoostingRegressor, that model saw the biggest improvement in it's RMSE score, alough the average percentage error still remains high. Before deciding that the GradientBoostingRegressor was the best model I also tried an ensemble method with a different combination of models, the best model was a combination of the RandomForestRegressor and the GradientBoostingRegressor. I managed to reduce the RMSE (compared with the current best model) by £0.36 and the mean percentage error also dropped. So an ensemble voting classifier using the RandomforestRegressor and GradientBoostingRegressor, with fine tuned parameters, provides the best results.
 
 
-Model | Root Mean Squared Error (£) |  Mean Absolute Percentage Error (%)
+Model | Root Mean Squared Error (£) |  Mean Absolute Percentage Error (%) |
 ------|---------------|---------
-RandomForestRegressor & GradientBoostingRegressor | 25.32 | 19.86
+RandomForestRegressor & GradientBoostingRegressor | 24.38 | 18.35 
 
 # 7. Conclusion
 
-The GradientBoostingRegressor provided the best results but with a mean percentage error of 18.86% it is still unreliable. So the end I wasn't able to create a highly accurate model. Although the model does significantly better than the baseline model of just predicting the median price, it would take a lot more fine tuning before I'd use it myself. If I was going to make the model more accurate I would try and collect more data, maybe a wider selection of items, and do more in depth data cleaning. 
+The GradientBoostingRegressor & GradientBoostingRegressor voting classifier ensemble provided the best results but with a mean percentage error of 18.35% it is still unreliable. So the end I wasn't able to create a highly accurate model. Although the model does significantly better than the baseline model of just predicting the median price, it would take a lot more fine tuning before I'd use it myself. If I was going to make the model more accurate I would try and collect more data, maybe a wider selection of items, and do more in depth data cleaning. 
 
 If I wanted to create a model to buy, and then sell items, I would remove prices from the dataset that I know are higher than the prices offered by the eBay stores selling iPhones so that the model could would focus less on the tail end values and be able to price the median values more accurately. 
 
